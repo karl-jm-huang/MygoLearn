@@ -1,0 +1,15 @@
+IP     country_name     city      time_zone
+82.9.227.57; United Kingdom; Cambridge; Europe/London
+110.20.41.188; Australia; Marrickville; Australia/Sydney
+2600:1013:b004:747d:90ad:ea04:ca57:edc9; United States; Honolulu; Pacific/Honolulu
+50.37.88.37; United States; Malden; America/Los_Angeles
+65.191.17.15; United States; Fayetteville; America/New_York
+119.246.229.186; Hong Kong; Central District; Asia/Hong_Kong
+168.102.11.90; United States; Fort Wayne; America/Indiana/Indianapolis
+197.234.219.109; Benin; Zoungoudo; Africa/Porto-Novo
+112.54.83.199; China; Weifang; Asia/Shanghai
+159.53.46.140; United States; New York; America/New_York
+202.188.55.11; Malaysia; Kuala Lumpur; Asia/Kuala_Lumpur
+170.253.172.42; United States; Oxford; America/Chicago
+106.79.205.44; India; Ahmedabad; Asia/Kolkata
+108.17.85.227; United States; Pittsburgh; America/New_York
