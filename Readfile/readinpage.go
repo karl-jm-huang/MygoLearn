@@ -88,6 +88,9 @@ func useSplit(filename string) {
 		count++
 		fmt.Printf("the line %d:\n%s\n", count, sc.Text())
 	}
+	if err := sc.Err(); err != nil {
+		fmt.Prinfln("An error has hippened")
+	}
 }
 
 func main() {

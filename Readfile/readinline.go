@@ -48,6 +48,9 @@ func useNewScanner(filename string) {
 		count++
 		fmt.Printf("the line %d: %s\n", count, sc.Text())
 	}
+	if err := sc.Err(); err != nil {
+		fmt.Prinfln("An error has hippened")
+	}
 }
 
 var LineSplit = func(data []byte, atEOF bool) (advance int, token []byte, err error) {
@@ -102,6 +105,9 @@ func useSplit(filename string) {
 	for sc.Scan() {
 		count++
 		fmt.Printf("the line %d: %s\n", count, sc.Text())
+	}
+	if err := sc.Err(); err != nil {
+		fmt.Prinfln("An error has hippened")
 	}
 }
 
