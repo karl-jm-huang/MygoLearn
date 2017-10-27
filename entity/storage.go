@@ -90,8 +90,9 @@ func DeleteUser(filter UserFilter) int {
 	count := 0
 	for i, v := range uData {
 		if filter(&v) {
-			uData[i] = uData[len(uData)-1]
-			uData = uData[:len(uData)-1]
+			// uData[i] = uData[len(uData)-1]
+			// uData = uData[:len(uData)-1]
+			uData = append(uData[:i], uData[i+1:]...)
 			count++
 		}
 	}
@@ -146,8 +147,9 @@ func DeleteMeeting(filter MeetingFilter) int {
 	count := 0
 	for i, v := range mData {
 		if filter(&v) {
-			mData[i] = mData[len(mData)-1]
-			mData = mData[:len(mData)-1]
+			// mData[i] = mData[len(mData)-1]
+			// mData = mData[:len(mData)-1]
+			mData = append(mData[:i], mData[i+1:]...)
 			count++
 		}
 	}
