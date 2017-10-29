@@ -29,9 +29,15 @@ func UserLogin(username string, password string) error {
 	return nil;
 }
 
+/*User logout*/
+func UserLogout() error{
+	SetCurUser(&User{})
+    Sync()
+    return nil
+}
 /*User Register
 *use regular expression to check if input right*/
-func UerRegister(name string, password string,
+func UserRegister(name string, password string,
 	email string, phone string) error{
 
 	_, err := GetCurUser();
@@ -95,6 +101,7 @@ func Delete() error{
 		return errors.New("Error when log off")
 	}
 	SetCurUser(&User{})
+	Sync()
 	return nil
 }
 
