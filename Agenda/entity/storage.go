@@ -16,13 +16,14 @@ type UserFilter func(*User) bool
 // MeetingFilter .
 type MeetingFilter func(*Meeting) bool
 
-var userinfoPath = "../data/userinfo"
-var metinfoPath = "../data/meetinginfo"
-var curUserPath = "../data/curUser.txt"
+var userinfoPath = "data/userinfo"
+var metinfoPath = "data/meetinginfo"
+var curUserPath = "data/curUser.txt"
 
 var curUserName *string
 
 var dirty bool
+
 var uData []User
 var mData []Meeting
 
@@ -52,6 +53,7 @@ func Sync() error {
 func readFromFile() error {
 	var e []error
 	str, err1 := readString(curUserPath)
+	//str, err1 := readString("data/curUser.txt")
 	if err1 != nil {
 		e = append(e, err1)
 	}

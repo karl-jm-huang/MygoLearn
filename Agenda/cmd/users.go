@@ -18,6 +18,8 @@ import (
 	"fmt"
 	"os"
 
+	"Agenda/entity"
+
 	"github.com/spf13/cobra"
 )
 
@@ -62,7 +64,7 @@ var registerCmd = &cobra.Command{
 		phone, _ := com.Flags().GetString("phone")
 		checkEmpty("phone", phone)
 
-		//	cmd.Register(username, password, mail, phone)   // 还没实现
+		entity.UserRegister(username, password, mail, phone) // 还没实现
 	},
 }
 
@@ -77,7 +79,7 @@ var loginCmd = &cobra.Command{
 		password, _ := com.Flags().GetString("password")
 		checkEmpty("password", password)
 
-		//cmd.Login(username, password) //还没实现
+		entity.UserLogin(username, password) //还没实现
 	},
 }
 
