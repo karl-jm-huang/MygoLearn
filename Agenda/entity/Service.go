@@ -8,7 +8,6 @@ import (
 
 /*What modify
 * 1. UserDelete ---> UserLogOff
-* 2.
 */
 /*User login*/
 func UserLogin(username string, password string) error {
