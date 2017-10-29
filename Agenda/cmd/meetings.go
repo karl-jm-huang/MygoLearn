@@ -15,6 +15,10 @@
 package cmd
 
 import (
+	"strings"
+
+	"Agenda/entity"
+
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +35,7 @@ var createMeetingsCmd = &cobra.Command{
 
 		participatorStr, _ := comd.Flags().GetString("participators")
 		checkEmpty("participators", participatorStr)
-		//participators := strings.Split(participatorStr, " ")  //还没实现
+		participators := strings.Split(participatorStr, " ")
 
 		startTime, _ := comd.Flags().GetString("start")
 		checkEmpty("Start Time", startTime)
@@ -39,14 +43,14 @@ var createMeetingsCmd = &cobra.Command{
 		endTime, _ := comd.Flags().GetString("end")
 		checkEmpty("End Time", endTime)
 
-		//cmd.HostMeeting(title, participators, startTime, endTime)  还没实现
+		entity.MeetingCreate(title, participators, startTime, endTime) // 还没实现
 	},
 }
 
-var cpCmd = &cobra.Command{
-	Use:   "cp",
-	Short: "Change your own meetings' participators.",
-	Long: `You can append or remove some participators from your own meeting
+var addParticipatorCmd = &cobra.Command{
+	Use:   "addParticipator",
+	Short: "Add your own meetings' participators.",
+	Long: `You can append some participators from your own meeting
 	by specifying the title name.`,
 	Run: func(comd *cobra.Command, args []string) {
 		title, _ := comd.Flags().GetString("title")
@@ -54,26 +58,28 @@ var cpCmd = &cobra.Command{
 
 		participatorStr, _ := comd.Flags().GetString("participators")
 		checkEmpty("participators", participatorStr)
-		// participators := strings.Split(participatorStr, " ")
-		//
-		// deleteOrNot, _ := comd.Flags().GetBool("delete")
-		// if deleteOrNot {
-		// 	var error int
-		// 	for _, each := range participators {
-		// 		error = cmd.AddParticipant(title, each)
-		// 		if error != 0 {
-		// 			return
-		// 		}
-		// 	}
-		// } else {
-		// 	var error int
-		// 	for _, each := range participators {
-		// 		error = cmd.RemoveParticipant(title, each)
-		// 		if error != 0 {
-		// 			return
-		// 		}
-		// 	}
-		// }   //还没实现
+
+		participators := strings.Split(participatorStr, ",")
+
+		entity.AddMeetingParticipator(title, participators)
+	},
+}
+
+var rmParticipatorCmd = &cobra.Command{
+	Use:   "rmParticipator",
+	Short: "Remove your own meetings' participators.",
+	Long: `You can remove some participators from your own meeting
+	by specifying the title name.`,
+	Run: func(comd *cobra.Command, args []string) {
+		title, _ := comd.Flags().GetString("title")
+		checkEmpty("title", title)
+
+		participatorStr, _ := comd.Flags().GetString("participators")
+		checkEmpty("participators", participatorStr)
+
+		participators := strings.Split(participatorStr, ",")
+
+		entity.RemoveParticipator(title, participators)
 	},
 }
 
@@ -89,19 +95,19 @@ var listMeetingsCmd = &cobra.Command{
 		endTime, _ := comd.Flags().GetString("end")
 		checkEmpty("End Time", endTime)
 
-		//cmd.QueryMeeting(startTime, endTime) //还没实现
+		entity.ListMeeting(startTime, endTime)
 	},
 }
 
-var cancelCmd = &cobra.Command{
-	Use:   "cancel",
+var delAMeetingCmd = &cobra.Command{
+	Use:   "deleteAMeeting",
 	Short: "Cancel your own meeting by specifying title name.",
 	Long:  `Using this command, you are able to cancel the meetings, which are created by you.`,
 	Run: func(comd *cobra.Command, args []string) {
 		title, _ := comd.Flags().GetString("title")
 		checkEmpty("Title", title)
 
-		//cmd.CancelMeeting(title) 还没实现
+		entity.DeleteAMeeting(title)
 	},
 }
 
@@ -122,32 +128,38 @@ var clearCmd = &cobra.Command{
 	Short: "Clear all meetings you attended or created.",
 	Long:  `Using this command, you can clear all of the meetings you attended or created.`,
 	Run: func(comd *cobra.Command, args []string) {
-		// cmd.ClearMeetings() // 还没实现
+		title, _ := comd.Flags().GetString("title")
+		checkEmpty("Title", title)
+
+		entity.DeleteAllMeeting()
 	},
 }
 
 func init() {
+	RootCmd.AddCommand(createMeetingsCmd)
 	createMeetingsCmd.Flags().StringP("title", "t", "", "Input title name.")
 	createMeetingsCmd.Flags().StringP("participators", "p", "", "Input participator name.")
 	createMeetingsCmd.Flags().StringP("start", "s", "", "Input start time as the format of (yyyy-mm-dd).")
 	createMeetingsCmd.Flags().StringP("end", "e", "", "Input end time as the format of (yyyy-mm-dd).")
 
-	cpCmd.Flags().BoolP("delete", "y", false, "If true, delete participators, otherwise append participators.")
-	cpCmd.Flags().StringP("title", "t", "", "Input the title name.")
-	cpCmd.Flags().StringP("participators", "p", "", "Input the participators.")
+	RootCmd.AddCommand(addParticipatorCmd)
+	addParticipatorCmd.Flags().StringP("title", "t", "", "Input the title name.")
+	addParticipatorCmd.Flags().StringP("participators", "p", "", "Input the participators.")
 
+	RootCmd.AddCommand(rmParticipatorCmd)
+	rmParticipatorCmd.Flags().StringP("title", "t", "", "Input the title name.")
+	rmParticipatorCmd.Flags().StringP("participators", "p", "", "Input the participators.")
+
+	RootCmd.AddCommand(listMeetingsCmd)
 	listMeetingsCmd.Flags().StringP("start", "s", "", "Input the start time.(yyyy-mm-dd)")
 	listMeetingsCmd.Flags().StringP("end", "e", "", "Input the end time.(yyyy-mm-dd)")
 
-	cancelCmd.Flags().StringP("title", "t", "", "Input the title.")
+	RootCmd.AddCommand(delAMeetingCmd)
+	delAMeetingCmd.Flags().StringP("title", "t", "", "Input the title.")
 
+	RootCmd.AddCommand(quitCmd)
 	quitCmd.Flags().StringP("title", "t", "", "Input the title.")
 
-	RootCmd.AddCommand(createMeetingsCmd)
-	RootCmd.AddCommand(cpCmd)
-	RootCmd.AddCommand(listMeetingsCmd)
-	RootCmd.AddCommand(cancelCmd)
-	RootCmd.AddCommand(quitCmd)
 	RootCmd.AddCommand(clearCmd)
 
 	// Here you will define your flags and configuration settings.
