@@ -36,11 +36,16 @@ func UserLogout() error {
 	return nil
 }
 
+/*User logout*/
+func UserLogout() error{
+	SetCurUser(&User{})
+    Sync()
+    return nil
+}
 /*User Register
 *use regular expression to check if input right*/
 func UserRegister(name string, password string,
 	email string, phone string) error {
-
 	_, err := GetCurUser()
 	if err == nil {
 		return errors.New("Error, can't do this operation. You hava login")
