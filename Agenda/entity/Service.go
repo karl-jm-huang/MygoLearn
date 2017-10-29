@@ -321,6 +321,11 @@ func checkParticipator(user []string, meeting Meeting) bool{
 					err = true
 				}
 			}
+
+			if usr == meeting.Sponsor{
+				fmt.Println("Participator can't be sponsor")
+				err = true
+			}
 		}
 	}
 	if err == true{
