@@ -269,6 +269,7 @@ func DeleteUser(filter UserFilter) int {
 // CreateMeeting : create a meeting
 // @param a meeting object
 func CreateMeeting(v *Meeting) {
+	//fmt.Println(v)
 	mData = append(mData, *v)
 	dirty = true
 	Sync()
@@ -334,7 +335,8 @@ func SetCurUser(u *User) {
 	} else {
 		*curUserName = u.Name
 	}
-    //写入文件
+
+	//写入文件
 	Sync()
 }
 
