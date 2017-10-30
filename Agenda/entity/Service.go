@@ -8,7 +8,7 @@ import (
 
 /*What modify
 * 1. UserDelete ---> UserLogOff
- */
+*/
 /*User login*/
 func UserLogin(username string, password string) error {
 	usr, err := GetCurUser()
@@ -179,11 +179,10 @@ func MeetingCreate(title string, participators []string, sdate string,
 		return errors.New("Error. Some Participator not exist")
 	}
 
-	//println("initial a meeting")
+	//create a meeting
 	meeting := Meeting{user.Name, participators, StringToDate(sdate),
 		StringToDate(edate), title}
-
-	//println("begin to create meeting")
+  
 	CreateMeeting(&meeting)
 	return nil
 }

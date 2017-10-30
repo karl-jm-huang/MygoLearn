@@ -335,6 +335,7 @@ func SetCurUser(u *User) {
 	} else {
 		*curUserName = u.Name
 	}
+
 	//写入文件
 	Sync()
 }
