@@ -8,7 +8,7 @@ import (
 
 /*What modify
 * 1. UserDelete ---> UserLogOff
-*/
+ */
 /*User login*/
 func UserLogin(username string, password string) error {
 	usr, err := GetCurUser()
@@ -145,7 +145,7 @@ func ListAllUser() error {
 		return true
 	}
 
-	fmt.Printf("%-.10q  %-20q  %-11q\n", "Nmae", "Email", "Phone")
+	fmt.Printf("%-.10q  %-20q  %-11q\n", "Name", "Email", "Phone")
 	for i, usr := range QueryUser(checkusr) {
 		if i == 0 && len(usr.Name) == 0 {
 			return errors.New("Error in list user")
@@ -182,7 +182,7 @@ func MeetingCreate(title string, participators []string, sdate string,
 	//create a meeting
 	meeting := Meeting{user.Name, participators, StringToDate(sdate),
 		StringToDate(edate), title}
-  
+
 	CreateMeeting(&meeting)
 	return nil
 }
