@@ -147,19 +147,17 @@ var quitCmd = &cobra.Command{
 	},
 }
 
-/*!!!!这应该是删除所有自己发起的会议, 作为参与者的会议不能删*/
+/*delete all meetings which are sponsored by this login user*/
 var clearCmd = &cobra.Command{
 	Use:   "clear",
 	Short: "Clear all meetings you attended or created.",
 	Long:  `Using this command, you can clear all of the meetings you attended or created.`,
 	Run: func(comd *cobra.Command, args []string) {
-		title, _ := comd.Flags().GetString("title")
-		checkEmpty("Title", title)
 
 		if err := entity.DeleteAllMeeting(); err != nil {
 			println(err)
 		} else {
-			println("You've successfully removed all the meetings you sponsored!")
+			println("You've successfully cleared all the meetings you sponsored!")
 		}
 	},
 }
