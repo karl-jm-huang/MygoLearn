@@ -18,9 +18,13 @@ import (
 	"strings"
 
 	"Agenda/entity"
+	"Agenda/loghelper"
 
 	"github.com/spf13/cobra"
 )
+
+var errLog = loghelper.Error
+var logLog = loghelper.Login
 
 // registerCmd represents the register command
 var createMeetingsCmd = &cobra.Command{
@@ -44,9 +48,9 @@ var createMeetingsCmd = &cobra.Command{
 		checkEmpty("End Time", endTime)
 
 		if err := entity.MeetingCreate(title, participators, startTime, endTime); err != nil {
-			println(err)
+			errLog.Println(err)
 		} else {
-			println("A meeting was successfully created!")
+			logLog.Println("A meeting was successfully created!")
 		}
 	},
 }
@@ -66,9 +70,9 @@ var addParticipatorCmd = &cobra.Command{
 		participators := strings.Split(participatorStr, ",")
 
 		if err := entity.AddMeetingParticipator(title, participators); err != nil {
-			println(err)
+			errLog.Println(err)
 		} else {
-			println("Add meeting participator successfully!")
+			logLog.Println("Add meeting participator successfully!")
 		}
 	},
 }
@@ -88,9 +92,9 @@ var rmParticipatorCmd = &cobra.Command{
 		participators := strings.Split(participatorStr, ",")
 
 		if err := entity.RemoveParticipator(title, participators); err != nil {
-			println(err)
+			errLog.Println(err)
 		} else {
-			println("Remove meeting participator successfully!")
+			logLog.Println("Remove meeting participator successfully!")
 		}
 	},
 }
@@ -108,9 +112,9 @@ var listMeetingsCmd = &cobra.Command{
 		checkEmpty("End Time", endTime)
 
 		if err := entity.ListMeeting(startTime, endTime); err != nil {
-			println(err)
+			errLog.Println(err)
 		} else {
-			println("Listing meeting operation completed successfully!")
+			logLog.Println("Listing meeting operation completed successfully!")
 		}
 	},
 }
@@ -124,9 +128,9 @@ var delAMeetingCmd = &cobra.Command{
 		checkEmpty("Title", title)
 
 		if err := entity.DeleteAMeeting(title); err != nil {
-			println(err)
+			errLog.Println(err)
 		} else {
-			println("The meeting was successfully deleted!")
+			logLog.Println("The meeting was successfully deleted!")
 		}
 	},
 }
@@ -140,9 +144,9 @@ var quitCmd = &cobra.Command{
 		checkEmpty("Title", title)
 
 		if err := entity.QuitMeeting(title); err != nil {
-			println(err)
+			errLog.Println(err)
 		} else {
-			println("You've successfully quit the meeting " + title + "!")
+			logLog.Println("You've successfully quit the meeting " + title + "!")
 		}
 	},
 }
@@ -155,9 +159,9 @@ var clearCmd = &cobra.Command{
 	Run: func(comd *cobra.Command, args []string) {
 
 		if err := entity.DeleteAllMeeting(); err != nil {
-			println(err)
+			errLog.Println(err)
 		} else {
-			println("You've successfully cleared all the meetings you sponsored!")
+			logLog.Println("You've successfully cleared all the meetings you sponsored!")
 		}
 	},
 }

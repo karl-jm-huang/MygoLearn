@@ -37,6 +37,7 @@ import (
 // 		fmt.Println("users called")
 // 	},
 // }
+
 func printError(error string) {
 	fmt.Fprint(os.Stderr, error)
 	os.Exit(1)
@@ -65,9 +66,11 @@ var registerCmd = &cobra.Command{
 		checkEmpty("phone", phone)
 
 		if err := entity.UserRegister(username, password, mail, phone); err != nil {
-			fmt.Println(err)
+			//fmt.Println(err)
+			errLog.Println(err)
 		} else {
-			fmt.Println("Successfully registered the account " + username + " !")
+			//fmt.Println("Successfully registered the account " + username + " !")
+			logLog.Println("Successfully registered the account " + username + " !")
 		}
 	},
 }
@@ -84,9 +87,11 @@ var loginCmd = &cobra.Command{
 		checkEmpty("password", password)
 
 		if err := entity.UserLogin(username, password); err != nil {
-			fmt.Println(err)
+			//fmt.Println(err)
+			errLog.Println(err)
 		} else {
-			fmt.Println(username + " had logged in successfully!")
+			// fmt.Println(username + " had logged in successfully!")
+			logLog.Println(username + " had logged in successfully!")
 		}
 	},
 }
@@ -97,9 +102,10 @@ var logoutCmd = &cobra.Command{
 	Long:  ``,
 	Run: func(com *cobra.Command, args []string) {
 		if err := entity.UserLogout(); err != nil {
-			fmt.Println(err)
+			// fmt.Println(err)
+			errLog.Println(err)
 		} else {
-			fmt.Println("You had logged out successfully!")
+			logLog.Println("You had logged out successfully!")
 		}
 	},
 }
@@ -110,9 +116,9 @@ var listUserCmd = &cobra.Command{
 	Long:  ``,
 	Run: func(com *cobra.Command, args []string) {
 		if err := entity.ListAllUser(); err != nil {
-			fmt.Println(err)
+			errLog.Println(err)
 		} else {
-			fmt.Println("Listing users operation completed successfully!")
+			logLog.Println("Listing users operation completed successfully!")
 		}
 	},
 }
@@ -124,9 +130,9 @@ var deleteUserCmd = &cobra.Command{
 And all of information about you will be erased! That's you are dead!!!`,
 	Run: func(com *cobra.Command, args []string) {
 		if err := entity.UserLogOff(); err != nil {
-			fmt.Println(err)
+			errLog.Println(err)
 		} else {
-			fmt.Println("Your account was deleted successfully!")
+			logLog.Println("Your account was deleted successfully!")
 		}
 	},
 }
