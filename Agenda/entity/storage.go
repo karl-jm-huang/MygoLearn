@@ -213,6 +213,7 @@ func readString(path string) (*string, error) {
 func CreateUser(v *User) {
 	uData = append(uData, *v)
 	dirty = true
+	Sync()
 }
 
 // QueryUser : query users
@@ -268,8 +269,10 @@ func DeleteUser(filter UserFilter) int {
 // CreateMeeting : create a meeting
 // @param a meeting object
 func CreateMeeting(v *Meeting) {
+	//fmt.Println(v)
 	mData = append(mData, *v)
 	dirty = true
+	Sync()
 }
 
 // QueryMeeting : query meetings
@@ -300,6 +303,7 @@ func UpdateMeeting(filter MeetingFilter, switcher func(*Meeting)) int {
 	if count > 0 {
 		dirty = true
 	}
+	Sync()
 	return count
 }
 
@@ -319,6 +323,7 @@ func DeleteMeeting(filter MeetingFilter) int {
 	if count > 0 {
 		dirty = true
 	}
+	Sync()
 	return count
 }
 
@@ -330,6 +335,8 @@ func SetCurUser(u *User) {
 	} else {
 		*curUserName = u.Name
 	}
+	//写入文件
+	Sync()
 }
 
 // GetCurUser .

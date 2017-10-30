@@ -6,6 +6,9 @@ import (
 	"regexp"
 )
 
+/*What modify
+* 1. UserDelete ---> UserLogOff
+ */
 /*User login*/
 func UserLogin(username string, password string) error {
 	usr, err := GetCurUser()
@@ -32,16 +35,9 @@ func UserLogin(username string, password string) error {
 /*User logout*/
 func UserLogout() error {
 	SetCurUser(&User{})
-	Sync()
 	return nil
 }
 
-/*User logout*/
-func UserLogout() error{
-	SetCurUser(&User{})
-    Sync()
-    return nil
-}
 /*User Register
 *use regular expression to check if input right*/
 func UserRegister(name string, password string,
@@ -50,6 +46,7 @@ func UserRegister(name string, password string,
 	if err == nil {
 		return errors.New("Error, can't do this operation. You hava login")
 	}
+
 	err = nil
 	var myuser = User{name, password, email, phone}
 	var checkuser = func(user *User) bool {
@@ -90,24 +87,55 @@ func UserRegister(name string, password string,
 	return nil
 }
 
-func UserDelete() error {
+/*User log off*/
+func UserLogOff() error {
 	usr, err := GetCurUser()
 	if err != nil {
 		return err
 	}
-
+	//Delete user from userList
 	var checkusr = func(user *User) bool {
 		if usr.Name == user.Name {
 			return true
 		}
 		return false
 	}
-
 	if DeleteUser(checkusr) != 1 {
 		return errors.New("Error when log off")
 	}
+
+	//Delete user from meetingList when the user as Sponsor
+	DeleteAllMeeting()
+
+	//Delete user from meetingList when the user as participator
+	var checkmeeting = func(meeting *Meeting) bool {
+		for _, participator := range meeting.Participators {
+			if participator == usr.Name {
+				return true
+			}
+		}
+		return false
+	}
+	var deletepartic = func(meeting *Meeting) {
+		for i, participator := range meeting.Participators {
+			if participator == usr.Name {
+				meeting.Participators = append(meeting.Participators[:i], meeting.Participators[i+1:]...)
+			}
+		}
+		//参与者为零 删除会议
+		if len(meeting.Participators) == 0 {
+			DeleteMeeting(func(meet *Meeting) bool {
+				if meeting.Sponsor == meet.Sponsor {
+					return true
+				}
+				return false
+			})
+		}
+	}
+	UpdateMeeting(checkmeeting, deletepartic)
+
+	//quit the agenda system
 	SetCurUser(&User{})
-	Sync()
 	return nil
 }
 
@@ -117,7 +145,7 @@ func ListAllUser() error {
 		return true
 	}
 
-	fmt.Printf("%-.10q  %-20q  %-11q", "Nmae", "Email", "Phone")
+	fmt.Printf("%-.10q  %-20q  %-11q\n", "Nmae", "Email", "Phone")
 	for i, usr := range QueryUser(checkusr) {
 		if i == 0 && len(usr.Name) == 0 {
 			return errors.New("Error in list user")
@@ -128,15 +156,16 @@ func ListAllUser() error {
 }
 
 /*Create Meeting*/
-func MeetingCreate(title string, participators []string, tmp_sdate string,
-	tmp_edate string) error {
+func MeetingCreate(title string, participators []string, sdate string,
+	edate string) error {
 	//check if meeting exist
-	var sponsor string = "hjm" //hjm用于测试，实际需要动态获取当前登录的用户名，未实现！！！
-
-	sdate := StringToDate(tmp_sdate)
-	edate := StringToDate(tmp_edate)
+	user, err := GetCurUser()
+	if err != nil {
+		return err
+	}
+	//check if meeting has existed
 	var checkmeeting = func(meeting *Meeting) bool {
-		if sponsor == meeting.Sponsor && title == meeting.Tittle {
+		if user.Name == meeting.Sponsor && title == meeting.Title {
 			return true
 		}
 		return false
@@ -145,14 +174,16 @@ func MeetingCreate(title string, participators []string, tmp_sdate string,
 		return errors.New("Error. The meetng has exist")
 	}
 
-	//check if participators exist
+	//println("check if participators exist")
 	if !checkParticipator(participators, Meeting{}) {
 		return errors.New("Error. Some Participator not exist")
 	}
 
-	//create a meeting
-	meeting := Meeting{sponsor, participators, sdate,
-		edate, title}
+	//println("initial a meeting")
+	meeting := Meeting{user.Name, participators, StringToDate(sdate),
+		StringToDate(edate), title}
+
+	//println("begin to create meeting")
 	CreateMeeting(&meeting)
 	return nil
 }
@@ -180,7 +211,7 @@ func AddMeetingParticipator(title string, participators []string) error {
 	//add participators
 	var checkmeeting = func(meet *Meeting) bool {
 		if meeting[0].Sponsor == meet.Sponsor &&
-			meeting[0].Tittle == meet.Tittle {
+			meeting[0].Title == meet.Title {
 			return true
 		}
 		return false
@@ -230,7 +261,7 @@ func RemoveParticipator(title string, participators []string) error {
 	//remove participator
 	var checkmeeting = func(meet *Meeting) bool {
 		if meeting[0].Sponsor == meet.Sponsor &&
-			meeting[0].Tittle == meet.Tittle {
+			meeting[0].Title == meet.Title {
 			return true
 		}
 		return false
@@ -282,7 +313,7 @@ func ListMeeting(tmp_sDate string, tmp_eDate string) error {
 		"Sponsor", "Participators")
 	for _, meeting := range meetings {
 		fmt.Printf("%.20s  %.16s  %.16s  %.20s  %s\n",
-			meeting.Tittle, DateToString(meeting.StartDate), DateToString(meeting.EndDate),
+			meeting.Title, DateToString(meeting.StartDate), DateToString(meeting.EndDate),
 			meeting.Sponsor, meeting.Participators)
 	}
 	return nil
@@ -296,7 +327,7 @@ func DeleteAMeeting(title string) error {
 	}
 
 	var checkMeeting = func(meeting *Meeting) bool {
-		if user.Name == meeting.Sponsor && title == meeting.Tittle {
+		if user.Name == meeting.Sponsor && title == meeting.Title {
 			return true
 		}
 		return false
@@ -322,10 +353,48 @@ func DeleteAllMeeting() error {
 	return nil
 }
 
+/*User quit the meeting which as a participator*/
+func QuitMeeting(title string) error {
+	user, err := GetCurUser()
+	if err != nil {
+		return err
+	}
+
+	var checkmeeting = func(meeting *Meeting) bool {
+		if title == meeting.Title {
+			for _, participator := range meeting.Participators {
+				if participator == user.Name {
+					return true
+				}
+			}
+		}
+
+		return false
+	}
+	var deletepartic = func(meeting *Meeting) {
+		for i, participator := range meeting.Participators {
+			if participator == user.Name {
+				meeting.Participators = append(meeting.Participators[:i], meeting.Participators[i+1:]...)
+			}
+		}
+		//参与者为零 删除会议
+		if len(meeting.Participators) == 0 {
+			DeleteMeeting(func(meet *Meeting) bool {
+				if meeting.Sponsor == meet.Sponsor {
+					return true
+				}
+				return false
+			})
+		}
+	}
+	UpdateMeeting(checkmeeting, deletepartic)
+	return nil
+}
+
 /*some auxiliary function */
 func checkParticipator(user []string, meeting Meeting) bool {
 	var err bool = false
-	if meeting.Tittle == "" {
+	if meeting.Title == "" {
 		for _, usr := range user {
 			var checkuser = func(user *User) bool {
 				if usr == user.Name {
@@ -372,7 +441,7 @@ func checkParticipator(user []string, meeting Meeting) bool {
 
 func checkMeeting(title string, name string) (bool, []Meeting) {
 	var checkmeet = func(meeting *Meeting) bool {
-		if title == meeting.Tittle && name == meeting.Sponsor {
+		if title == meeting.Title && name == meeting.Sponsor {
 			return true
 		}
 		return false

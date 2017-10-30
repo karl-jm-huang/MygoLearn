@@ -24,7 +24,7 @@ func (mdate Date) GetYear() int {
 }
 
 // SetYear .
-func (mdate Date) SetYear(tyear int) {
+func (mdate *Date) SetYear(tyear int) {
 	mdate.Year = tyear
 }
 
@@ -33,7 +33,7 @@ func (mdate Date) GetMonth() int {
 	return mdate.Month
 }
 
-func (mdate Date) SetMonth(tmonth int) {
+func (mdate *Date) SetMonth(tmonth int) {
 	mdate.Month = tmonth
 }
 
@@ -41,7 +41,7 @@ func (mdate Date) GetDay() int {
 	return mdate.Day
 }
 
-func (mdate Date) SetDay(tday int) {
+func (mdate *Date) SetDay(tday int) {
 	mdate.Day = tday
 }
 
@@ -49,7 +49,7 @@ func (mdate Date) GetHour() int {
 	return mdate.Hour
 }
 
-func (mdate Date) SetHour(thour int) {
+func (mdate *Date) SetHour(thour int) {
 	mdate.Hour = thour
 }
 
@@ -57,7 +57,7 @@ func (mdate Date) GetMinute() int {
 	return mdate.Minute
 }
 
-func (mdate Date) SetMinute(tminute int) {
+func (mdate *Date) SetMinute(tminute int) {
 	mdate.Minute = tminute
 }
 
@@ -97,67 +97,35 @@ func IsValid(tdate Date) bool {
 	return true
 }
 
-func StringToDate(tdatestring string) Date {
-	var resultDate Date
-	if len(tdatestring) != 16 {
-		fmt.Println("the len of the ", tdatestring, "change to Date isn't 16")
+func StringToDate(t_dateString string) Date {
+	var t_date = Date{0, 0, 0, 0, 0}
+	if len(t_dateString) != 16 || t_dateString[4] != '-' || t_dateString[7] != '-' || t_dateString[10] != '/' || t_dateString[13] != ':' {
+		fmt.Println("the form of the Date is wrong!")
+		return t_date
 	}
-	count := 0
-	for count < len(tdatestring) {
-		switch count {
-		case 4:
-			if tdatestring[4] != '-' {
+	for i := 0; i < 16; i++ {
+		if i == 4 || i == 7 || i == 10 || i == 13 {
+			continue
+		} else {
+			if t_dateString[i] < '0' || t_dateString[i] > '9' {
 				fmt.Println("the form of the Date is wrong!")
-				return resultDate
-			} else {
-				ts := tdatestring[0:4]
-				tyear, _ := strconv.Atoi(ts)
-				resultDate.SetYear(tyear)
-			}
-		case 7:
-			if tdatestring[7] != '-' {
-				fmt.Println("the form of the Date is wrong!")
-				return resultDate
-			} else {
-				ts := tdatestring[5:7]
-				tmonth, _ := strconv.Atoi(ts)
-				resultDate.SetMonth(tmonth)
-			}
-		case 10:
-			if tdatestring[10] != '/' {
-				fmt.Println("the form of the Date is wrong!")
-				return resultDate
-			} else {
-				ts := tdatestring[8:10]
-				tday, _ := strconv.Atoi(ts)
-				resultDate.SetDay(tday)
-			}
-		case 13:
-			if tdatestring[13] != ':' {
-				fmt.Println("the form of the Date is wrong!")
-				return resultDate
-			} else {
-				ts := tdatestring[11:13]
-				thour, _ := strconv.Atoi(ts)
-				resultDate.SetHour(thour)
-			}
-		case 15:
-			if tdatestring[count] < '0' || tdatestring[count] > '9' {
-				fmt.Println("the form of the Date is wrong!")
-				return resultDate
-			} else {
-				ts := tdatestring[14:16]
-				tminute, _ := strconv.Atoi(ts)
-				resultDate.SetMinute(tminute)
-			}
-		default:
-			if tdatestring[count] < '0' || tdatestring[count] > '9' {
-				fmt.Println("the form of the Date is wrong!")
-				return resultDate
+				return t_date
 			}
 		}
 	}
-	return resultDate
+
+	t_year, _ := strconv.Atoi(t_dateString[0:4])
+	t_month, _ := strconv.Atoi(t_dateString[5:7])
+	t_day, _ := strconv.Atoi(t_dateString[8:10])
+	t_hour, _ := strconv.Atoi(t_dateString[11:13])
+	t_min, _ := strconv.Atoi(t_dateString[14:16])
+	t_date.SetYear(t_year)
+	t_date.SetMonth(t_month)
+	t_date.SetDay(t_day)
+	t_date.SetHour(t_hour)
+	t_date.SetMinute(t_min)
+
+	return t_date
 }
 
 func IntToString(a int) string {
@@ -187,10 +155,10 @@ func (mdate Date) CopyDate(tdate Date) Date {
 
 func (mdate Date) IsSameDate(tdate Date) bool {
 	return tdate.GetYear() == mdate.GetYear() &&
-			tdate.GetMonth() == mdate.GetMonth() &&
-			tdate.GetDay() == mdate.GetDay() &&
-			tdate.GetHour() == mdate.GetHour() &&
-			tdate.GetMinute() == mdate.GetMinute()
+		tdate.GetMonth() == mdate.GetMonth() &&
+		tdate.GetDay() == mdate.GetDay() &&
+		tdate.GetHour() == mdate.GetHour() &&
+		tdate.GetMinute() == mdate.GetMinute()
 }
 
 func (mdate Date) MoreThan(tdate Date) bool {

@@ -43,7 +43,11 @@ var createMeetingsCmd = &cobra.Command{
 		endTime, _ := comd.Flags().GetString("end")
 		checkEmpty("End Time", endTime)
 
-		entity.MeetingCreate(title, participators, startTime, endTime) // 还没实现
+		if err := entity.MeetingCreate(title, participators, startTime, endTime); err != nil {
+			println(err)
+		} else {
+			println("A meeting was successfully created!")
+		}
 	},
 }
 
@@ -61,7 +65,11 @@ var addParticipatorCmd = &cobra.Command{
 
 		participators := strings.Split(participatorStr, ",")
 
-		entity.AddMeetingParticipator(title, participators)
+		if err := entity.AddMeetingParticipator(title, participators); err != nil {
+			println(err)
+		} else {
+			println("Add meeting participator successfully!")
+		}
 	},
 }
 
@@ -79,7 +87,11 @@ var rmParticipatorCmd = &cobra.Command{
 
 		participators := strings.Split(participatorStr, ",")
 
-		entity.RemoveParticipator(title, participators)
+		if err := entity.RemoveParticipator(title, participators); err != nil {
+			println(err)
+		} else {
+			println("Remove meeting participator successfully!")
+		}
 	},
 }
 
@@ -95,7 +107,11 @@ var listMeetingsCmd = &cobra.Command{
 		endTime, _ := comd.Flags().GetString("end")
 		checkEmpty("End Time", endTime)
 
-		entity.ListMeeting(startTime, endTime)
+		if err := entity.ListMeeting(startTime, endTime); err != nil {
+			println(err)
+		} else {
+			println("Listing meeting operation completed successfully!")
+		}
 	},
 }
 
@@ -107,7 +123,11 @@ var delAMeetingCmd = &cobra.Command{
 		title, _ := comd.Flags().GetString("title")
 		checkEmpty("Title", title)
 
-		entity.DeleteAMeeting(title)
+		if err := entity.DeleteAMeeting(title); err != nil {
+			println(err)
+		} else {
+			println("The meeting was successfully deleted!")
+		}
 	},
 }
 
@@ -119,10 +139,15 @@ var quitCmd = &cobra.Command{
 		title, _ := comd.Flags().GetString("title")
 		checkEmpty("Title", title)
 
-		//cmd.QuitMeeting(title)  //还没实现
+		if err := entity.QuitMeeting(title); err != nil {
+			println(err)
+		} else {
+			println("You've successfully quit the meeting " + title + "!")
+		}
 	},
 }
 
+/*!!!!这应该是删除所有自己发起的会议, 作为参与者的会议不能删*/
 var clearCmd = &cobra.Command{
 	Use:   "clear",
 	Short: "Clear all meetings you attended or created.",
@@ -131,7 +156,11 @@ var clearCmd = &cobra.Command{
 		title, _ := comd.Flags().GetString("title")
 		checkEmpty("Title", title)
 
-		entity.DeleteAllMeeting()
+		if err := entity.DeleteAllMeeting(); err != nil {
+			println(err)
+		} else {
+			println("You've successfully removed all the meetings you sponsored!")
+		}
 	},
 }
 

@@ -64,7 +64,11 @@ var registerCmd = &cobra.Command{
 		phone, _ := com.Flags().GetString("phone")
 		checkEmpty("phone", phone)
 
-		entity.UserRegister(username, password, mail, phone) // 还没实现
+		if err := entity.UserRegister(username, password, mail, phone); err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println("Successfully registered the account " + username + " !")
+		}
 	},
 }
 
@@ -79,7 +83,11 @@ var loginCmd = &cobra.Command{
 		password, _ := com.Flags().GetString("password")
 		checkEmpty("password", password)
 
-		entity.UserLogin(username, password) //还没实现
+		if err := entity.UserLogin(username, password); err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println(username + " had logged in successfully!")
+		}
 	},
 }
 
@@ -88,26 +96,38 @@ var logoutCmd = &cobra.Command{
 	Short: "Logout",
 	Long:  ``,
 	Run: func(com *cobra.Command, args []string) {
-		//cmd.Logout() //还没实现
+		if err := entity.UserLogout(); err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println("You had logged out successfully!")
+		}
 	},
 }
 
-var listCmd = &cobra.Command{
-	Use:   "list",
+var listUserCmd = &cobra.Command{
+	Use:   "listUser",
 	Short: "",
 	Long:  ``,
 	Run: func(com *cobra.Command, args []string) {
-		//cmd.ShowUsers()   // 还没实现
+		if err := entity.ListAllUser(); err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println("Listing users operation completed successfully!")
+		}
 	},
 }
 
-var deleteCmd = &cobra.Command{
-	Use:   "delete",
+var deleteUserCmd = &cobra.Command{
+	Use:   "deleteUser",
 	Short: "Delete your account.",
 	Long: `Once you have deleted your account, you have no way to get it back!!!
 And all of information about you will be erased! That's you are dead!!!`,
 	Run: func(com *cobra.Command, args []string) {
-		//cmd.DeleteUser()  //还没实现
+		if err := entity.UserLogOff(); err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println("Your account was deleted successfully!")
+		}
 	},
 }
 
@@ -123,8 +143,8 @@ func init() {
 	RootCmd.AddCommand(registerCmd)
 	RootCmd.AddCommand(loginCmd)
 	RootCmd.AddCommand(logoutCmd)
-	RootCmd.AddCommand(listCmd)
-	RootCmd.AddCommand(deleteCmd)
+	RootCmd.AddCommand(deleteUserCmd)
+	RootCmd.AddCommand(listUserCmd)
 
 	// Here you will define your flags and configuration settings.
 
