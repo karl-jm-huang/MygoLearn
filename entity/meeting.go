@@ -7,22 +7,22 @@ type Meeting struct {
 	Sponsor            string
 	Participators      []string
 	StartDate, EndDate Date
-	Tittle             string
+	Title              string
 }
 
-func (m_meeting Meeting) init(t_Sponsor string, t_Participators []string, t_StartDate Date, t_EndDate Date, t_Tittle string) {
+func (m_meeting Meeting) init(t_Sponsor string, t_Participators []string, t_StartDate Date, t_EndDate Date, t_Title string) {
 	m_meeting.Sponsor = t_Sponsor
 	m_meeting.SetParticipator(t_Participators)
 	m_meeting.StartDate.CopyDate(t_StartDate)
 	m_meeting.EndDate.CopyDate(t_EndDate)
-	m_meeting.Tittle = t_Tittle
+	m_meeting.Title = t_Title
 }
 func (m_meeting Meeting) CopyMeeting(t_meeting Meeting) {
 	m_meeting.Sponsor = t_meeting.Sponsor
 	m_meeting.SetParticipator(t_meeting.Participators)
 	m_meeting.StartDate.CopyDate(t_meeting.StartDate)
 	m_meeting.EndDate.CopyDate(t_meeting.EndDate)
-	m_meeting.Tittle = t_meeting.Tittle
+	m_meeting.Title = t_meeting.Title
 }
 func (m_meeting Meeting) GetSponsor() string {
 	return m_meeting.Sponsor
@@ -81,11 +81,11 @@ func (m_meeting Meeting) SetEndDate(t_endTime Date) {
 }
 
 func (m_meeting Meeting) GetTitle() string {
-	return m_meeting.Tittle
+	return m_meeting.Title
 }
 
 func (m_meeting Meeting) SetTitle(t_title string) {
-	m_meeting.Tittle = t_title
+	m_meeting.Title = t_title
 }
 
 func (m_meeting Meeting) IsParticipator(t_username string) bool {

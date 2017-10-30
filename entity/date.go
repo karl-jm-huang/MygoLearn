@@ -186,11 +186,11 @@ func (mdate Date) CopyDate(tdate Date) Date {
 }
 
 func (mdate Date) IsSameDate(tdate Date) bool {
-	return (tdate.GetYear() == mdate.GetYear() &&
-		tdate.GetMonth() == mdate.GetMonth() &&
-		tdate.GetDay() == mdate.GetDay() &&
-		tdate.GetHour() == mdate.GetHour() &&
-		tdate.GetMinute() == mdate.GetMinute())
+	return tdate.GetYear() == mdate.GetYear() &&
+			tdate.GetMonth() == mdate.GetMonth() &&
+			tdate.GetDay() == mdate.GetDay() &&
+			tdate.GetHour() == mdate.GetHour() &&
+			tdate.GetMinute() == mdate.GetMinute()
 }
 
 func (mdate Date) MoreThan(tdate Date) bool {
