@@ -15,6 +15,7 @@
 package cmd
 
 import (
+	"fmt"
 	"strings"
 
 	"Agenda/entity"
@@ -49,8 +50,10 @@ var createMeetingsCmd = &cobra.Command{
 
 		if err := entity.MeetingCreate(title, participators, startTime, endTime); err != nil {
 			errLog.Println(err)
+			fmt.Println(err)
 		} else {
 			logLog.Println("A meeting was successfully created!")
+			fmt.Println("A meeting was successfully created!")
 		}
 	},
 }
@@ -71,8 +74,10 @@ var addParticipatorCmd = &cobra.Command{
 
 		if err := entity.AddMeetingParticipator(title, participators); err != nil {
 			errLog.Println(err)
+			fmt.Println(err)
 		} else {
 			logLog.Println("Add meeting participator successfully!")
+			fmt.Println("Add meeting participator successfully!")
 		}
 	},
 }
@@ -93,8 +98,10 @@ var rmParticipatorCmd = &cobra.Command{
 
 		if err := entity.RemoveParticipator(title, participators); err != nil {
 			errLog.Println(err)
+			fmt.Println(err)
 		} else {
 			logLog.Println("Remove meeting participator successfully!")
+			fmt.Println("Remove meeting participator successfully!")
 		}
 	},
 }
@@ -113,8 +120,10 @@ var listMeetingsCmd = &cobra.Command{
 
 		if err := entity.ListMeeting(startTime, endTime); err != nil {
 			errLog.Println(err)
+			fmt.Println(err)
 		} else {
 			logLog.Println("Listing meeting operation completed successfully!")
+			fmt.Println("Listing meeting operation completed successfully!")
 		}
 	},
 }
@@ -129,7 +138,9 @@ var delAMeetingCmd = &cobra.Command{
 
 		if err := entity.DeleteAMeeting(title); err != nil {
 			errLog.Println(err)
+			fmt.Println(err)
 		} else {
+			fmt.Println("The meeting was successfully deleted!")
 			logLog.Println("The meeting was successfully deleted!")
 		}
 	},
@@ -145,8 +156,10 @@ var quitCmd = &cobra.Command{
 
 		if err := entity.QuitMeeting(title); err != nil {
 			errLog.Println(err)
+			fmt.Println(err)
 		} else {
 			logLog.Println("You've successfully quit the meeting " + title + "!")
+			fmt.Println("You've successfully quit the meeting " + title + "!")
 		}
 	},
 }
@@ -160,8 +173,10 @@ var clearCmd = &cobra.Command{
 
 		if err := entity.DeleteAllMeeting(); err != nil {
 			errLog.Println(err)
+			fmt.Println(err)
 		} else {
 			logLog.Println("You've successfully cleared all the meetings you sponsored!")
+			fmt.Println("You've successfully cleared all the meetings you sponsored!")
 		}
 	},
 }
