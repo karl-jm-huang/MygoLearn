@@ -145,7 +145,7 @@ func ListAllUser() error {
 		return true
 	}
 
-	fmt.Printf("%-.10q  %-20q  %-11q", "Nmae", "Email", "Phone")
+	fmt.Printf("%-.10q  %-20q  %-11q\n", "Nmae", "Email", "Phone")
 	for i, usr := range QueryUser(checkusr) {
 		if i == 0 && len(usr.Name) == 0 {
 			return errors.New("Error in list user")
@@ -174,7 +174,7 @@ func MeetingCreate(title string, participators []string, sdate string,
 		return errors.New("Error. The meetng has exist")
 	}
 
-	//check if participators exist
+	//println("check if participators exist")
 	if !checkParticipator(participators, Meeting{}) {
 		return errors.New("Error. Some Participator not exist")
 	}
@@ -182,6 +182,7 @@ func MeetingCreate(title string, participators []string, sdate string,
 	//create a meeting
 	meeting := Meeting{user.Name, participators, StringToDate(sdate),
 		StringToDate(edate), title}
+  
 	CreateMeeting(&meeting)
 	return nil
 }
