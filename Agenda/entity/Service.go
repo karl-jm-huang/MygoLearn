@@ -59,24 +59,28 @@ func UserRegister(name string, password string,
 	if len(QueryUser(checkuser)) != 0 {
 		err = errors.New("Some errors have taken place.")
 		fmt.Println("the username has been used.")
+		errLog.Println("the username has been used.")
 	}
 
 	matched, _ := regexp.MatchString("[^\\s_\\n\\t]{5,}", password)
 	if !matched {
 		err = errors.New("Some errors have taken place")
-		fmt.Print("password format error.")
+		fmt.Println("password format error.")
+		errLog.Println("password format error.")
 	}
 
 	matched, _ = regexp.MatchString("([0-9]|[A-Z]|[a-z])+@([0-9]|[a-z])+\\.+?com", email)
 	if !matched {
 		err = errors.New("Some errors have taken place")
-		fmt.Print("email format error.")
+		fmt.Println("email format error.")
+		errLog.Println("email format error.")
 	}
 
 	matched, _ = regexp.MatchString("[0-9]{11}", phone)
 	if !matched {
 		err = errors.New("Some errors have taken place")
 		fmt.Println("phone format error.")
+		errLog.Println("phone format error.")
 	}
 
 	if err != nil {
@@ -146,11 +150,13 @@ func ListAllUser() error {
 	}
 
 	fmt.Printf("%-.10q  %-20q  %-11q\n", "Name", "Email", "Phone")
+	loginLog.Printf("%-.10q  %-20q  %-11q\n", "Name", "Email", "Phone")
 	for i, usr := range QueryUser(checkusr) {
 		if i == 0 && len(usr.Name) == 0 {
 			return errors.New("Error in list user")
 		}
 		fmt.Printf("%-.10q  %-20q  %-11q\n", usr.Name, usr.Email, usr.Phone)
+		loginLog.Printf("%-.10q  %-20q  %-11q\n", usr.Name, usr.Email, usr.Phone)
 	}
 	return nil
 }
@@ -310,8 +316,13 @@ func ListMeeting(tmp_sDate string, tmp_eDate string) error {
 	meetings := QueryMeeting(checkMeeting)
 	fmt.Printf("%.20s  %.16s  %.16s  %.20s  %s\n", "Title", "StartDate", "EndDate",
 		"Sponsor", "Participators")
+	loginLog.Printf("%.20s  %.16s  %.16s  %.20s  %s\n", "Title", "StartDate", "EndDate",
+		"Sponsor", "Participators")
 	for _, meeting := range meetings {
 		fmt.Printf("%.20s  %.16s  %.16s  %.20s  %s\n",
+			meeting.Title, DateToString(meeting.StartDate), DateToString(meeting.EndDate),
+			meeting.Sponsor, meeting.Participators)
+		loginLog.Printf("%.20s  %.16s  %.16s  %.20s  %s\n",
 			meeting.Title, DateToString(meeting.StartDate), DateToString(meeting.EndDate),
 			meeting.Sponsor, meeting.Participators)
 	}
@@ -403,6 +414,7 @@ func checkParticipator(user []string, meeting Meeting) bool {
 			}
 			if len(QueryUser(checkuser)) == 0 {
 				fmt.Printf("the participator %s isn't exist.\n", usr)
+				errLog.Printf("the participator %s isn't exist.\n", usr)
 				err = true
 			}
 		}
@@ -416,18 +428,21 @@ func checkParticipator(user []string, meeting Meeting) bool {
 			}
 			if len(QueryUser(checkuser)) == 0 {
 				fmt.Printf("the participator %s isn't exist.\n", usr)
+				errLog.Printf("the participator %s isn't exist.\n", usr)
 				err = true
 			}
 
 			for _, participator := range meeting.Participators {
 				if usr == participator {
 					fmt.Printf("%s has been a participator.", usr)
+					errLog.Printf("%s has been a participator.", usr)
 					err = true
 				}
 			}
 
 			if usr == meeting.Sponsor {
 				fmt.Println("Participator can't be sponsor")
+				errLog.Println("Participator can't be sponsor")
 				err = true
 			}
 		}
@@ -449,6 +464,7 @@ func checkMeeting(title string, name string) (bool, []Meeting) {
 	meeting := QueryMeeting(checkmeet)
 	if len(meeting) == 0 {
 		fmt.Println("Error. The meetng has exist.")
+		errLog.Println("Error. The meetng has exist.")
 		return false, meeting
 	}
 	return true, meeting

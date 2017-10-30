@@ -49,8 +49,8 @@ func init() {
 	loginlog = getLogFile()
 	set(ioutil.Discard, os.Stdout, errlog, loginlog)
 
-	Info.Println("Special Information")
-	Warning.Println("There is something you need to know about")
+	//Info.Println("Special Information")
+	//Warning.Println("There is something you need to know about")
 	Error.Println("Something has failed")
 	Login.Println("There is the log message")
 }

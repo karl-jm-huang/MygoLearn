@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -35,7 +36,7 @@ func init() {
 	loginLog = loghelper.Login
 	dirty = false
 	if err := readFromFile(); err != nil {
-		//fmt.Println("readFromFile fail:", err)
+		fmt.Println("readFromFile fail:", err)
 		errLog.Println("readFromFile fail: ", err)
 	}
 }
@@ -48,7 +49,7 @@ func Logout() error {
 // Sync .
 func Sync() error {
 	if err := writeToFile(); err != nil {
-		//fmt.Println("write to file fail,", err)
+		fmt.Println("write to file fail,", err)
 		errLog.Println("write to file fail,", err)
 		return err
 	}
@@ -105,7 +106,7 @@ func writeToFile() error {
 func readUser() error {
 	file, err := os.Open(userinfoPath)
 	if err != nil {
-		//fmt.Println("Open File Fail:", userinfoPath, err)
+		fmt.Println("Open File Fail:", userinfoPath, err)
 		errLog.Println("Open File Fail:", userinfoPath, err)
 		return err
 	}
@@ -116,7 +117,7 @@ func readUser() error {
 	case nil, io.EOF:
 		return nil
 	default:
-		// fmt.Println("Decode User Fail:", err)
+		fmt.Println("Decode User Fail:", err)
 		errLog.Println("Decode User Fail:", err)
 		return err
 	}
@@ -125,7 +126,7 @@ func readUser() error {
 func readMet() error {
 	file, err := os.Open(metinfoPath)
 	if err != nil {
-		//fmt.Println("Open File Fail:", metinfoPath, err)
+		fmt.Println("Open File Fail:", metinfoPath, err)
 		errLog.Println("Open File Fail:", metinfoPath, err)
 		return err
 	}
@@ -136,7 +137,7 @@ func readMet() error {
 	case nil, io.EOF:
 		return nil
 	default:
-		// fmt.Println("Decode Met Fail:", err)
+		fmt.Println("Decode Met Fail:", err)
 		errLog.Println("Decode Met Fail:", err)
 		return err
 	}
@@ -145,7 +146,7 @@ func readMet() error {
 func writeUser() error {
 	file, err := os.Create(userinfoPath)
 	if err != nil {
-		// fmt.Println("writeUser Fail:", err)
+		fmt.Println("writeUser Fail:", err)
 		errLog.Println("writeUser Fail:", err)
 		return err
 	}
@@ -154,7 +155,7 @@ func writeUser() error {
 	enc := json.NewEncoder(file)
 
 	if err := enc.Encode(&uData); err != nil {
-		// fmt.Println("Encode User Fail:", err)
+		fmt.Println("Encode User Fail:", err)
 		errLog.Println("Encode User Fail:", err)
 		return err
 	}
