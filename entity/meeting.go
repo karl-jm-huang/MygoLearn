@@ -7,7 +7,7 @@ type Meeting struct {
 	Sponsor            string
 	Participators      []string
 	StartDate, EndDate Date
-	Title              string
+	Title             string
 }
 
 func (m_meeting Meeting) init(t_Sponsor string, t_Participators []string, t_StartDate Date, t_EndDate Date, t_Title string) {
