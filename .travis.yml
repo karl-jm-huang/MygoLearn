@@ -1,0 +1,12 @@
+language: go
+install: true
+sudo: required
+
+
+go:
+  - 1.7
+  - master
+script: make test
+env:
+  global:
+    - GOARCH=amd64
