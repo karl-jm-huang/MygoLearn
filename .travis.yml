@@ -1,19 +1,4 @@
 language: go
 
 go:
-  - 1.7
-  - master
-
-notification:
-  email:
-    recipients:
-      462361315@qq.com
-  on_sucess: change
-  on_failure: always
-
-install:
-
-before_install:
-
-script:
-  -go build
+  - 1.9
