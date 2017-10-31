@@ -1,12 +1,19 @@
 language: go
-install: true
-sudo: required
-
 
 go:
   - 1.7
   - master
-script: make test
-env:
-  global:
-    - GOARCH=amd64
+
+notification:
+  email:
+    recipients:
+      462361315@qq.com
+  on_sucess: change
+  on_failure: always
+
+install:
+
+before_install:
+
+script:
+  -go build
